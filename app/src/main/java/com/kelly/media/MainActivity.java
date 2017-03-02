@@ -1,19 +1,26 @@
 package com.kelly.media;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
+import com.kelly.media.fragment.BaseFragment;
+import com.kelly.media.fragment.LocalAudioFragment;
+import com.kelly.media.fragment.LocalVideoFragment;
+import com.kelly.media.fragment.NetAudioFragment;
+import com.kelly.media.fragment.NetVideoFragment;
 import com.kelly.slidemenu.SlideMenu;
 import com.michaldrabik.tapbarmenulib.TapBarMenu;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton buttonToggle;   //显示菜单按钮
     private SlideMenu menu;
+    private ArrayList<BaseFragment> mFragments;
+    private int position = 0;//Fragment页面的下标位置
+    private Fragment tempFragment;//缓存的Fragment
 
     @Bind(R.id.tapBarMenu)
     TapBarMenu mTapBarMenu;
@@ -39,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         initView();
 
         initToorBar();
+
+        initFragment();
+
     }
 
     private void initView() {
@@ -58,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
                 menu.toggleMenu();
             }
         });
+    }
+
+    private void initFragment(){
+        mFragments = new ArrayList<>();
+        mFragments.add(new LocalVideoFragment());//本地视频
+        mFragments.add(new LocalAudioFragment());//本地音乐
+        mFragments.add(new NetAudioFragment());//网络音乐
+        mFragments.add(new NetVideoFragment());//网络视频
+
+        //默认选中本地视频
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_home_content, mFragments.get(0)).commit();
     }
 
     @Override
@@ -104,16 +128,47 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.item1:
                 Toast.makeText(this,"Item 1 selected",Toast.LENGTH_SHORT).show();
+                position = 0;
                 break;
             case R.id.item2:
                 Toast.makeText(this,"Item 2 selected",Toast.LENGTH_SHORT).show();
+                position = 1;
                 break;
             case R.id.item3:
                 Toast.makeText(this,"Item 3 selected",Toast.LENGTH_SHORT).show();
+                position = 2;
                 break;
             case R.id.item4:
                 Toast.makeText(this,"Item 4 selected",Toast.LENGTH_SHORT).show();
+                position = 3;
                 break;
+        }
+        //Fragment-当前的Fragment
+        Fragment currentFragment = mFragments.get(position);
+        switchFragment(currentFragment);
+    }
+
+    private void switchFragment(Fragment currentFragment){
+        if (tempFragment != currentFragment) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            if (currentFragment != null) {
+                if (!currentFragment.isAdded()) {
+                    if (tempFragment != null) {
+                        ft.hide(tempFragment);
+                    }
+                    //如果没有添加就添加
+                    ft.add(R.id.fl_home_content, currentFragment);
+                } else {
+                    //把之前的隐藏
+                    if (tempFragment != null) {
+                        ft.hide(tempFragment);
+                    }
+                    //如果添加了就直接显示
+                    ft.show(currentFragment);
+                }
+                ft.commit();
+            }
+            tempFragment = currentFragment;
         }
     }
 }
