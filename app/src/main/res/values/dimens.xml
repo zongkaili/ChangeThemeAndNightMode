@@ -5,4 +5,7 @@
     <dimen name="menu_left_margin">20dp</dimen>
     <dimen name="menu_top_margin">20dp</dimen>
     <dimen name="menu_text_size">20sp</dimen>
+
+    <dimen name="sliding_menu_width">80dp</dimen>
+
 </resources>

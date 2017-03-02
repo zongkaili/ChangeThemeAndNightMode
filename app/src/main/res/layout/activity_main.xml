@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,33 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:rightPadding="100dp"
-        android:background="@drawable/bg_slide_menu">
+        android:background="@drawable/bg_home_content">
         <LinearLayout
             android:id="@+id/wapper"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
         <include
             android:id="@+id/menu"
-            layout="@layout/left_menu"/>
-        <LinearLayout
+            layout="@layout/home_left_menu"/>
+
+        <include
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_act_slide_content"
-            android:orientation="horizontal">
-        <!--此处为主界面的内容-->
-            <ImageButton
-                android:id="@+id/buttonToggle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="15dp"
-                android:background="#0000"
-                android:scaleType="fitXY"
-                android:src="@drawable/arrow_left2"/>
-         </LinearLayout>
+            layout="@layout/home_content"/>
 
         </LinearLayout>
 
