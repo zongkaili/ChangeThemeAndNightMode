@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.kelly.slidemenu.SlideMenu;
@@ -35,37 +36,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        initToorBar();
-
         initView();
+
+        initToorBar();
+    }
+
+    private void initView() {
+        menu = (SlideMenu)findViewById(R.id.slideMenu);
     }
 
     private void initToorBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.toolbar_menu);
-
         toolbar.setNavigationIcon(R.drawable.ic_drawer_home);
-
         toolbar.setTitle(R.string.home_page);
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
-    }
 
-    private void initView() {
-        menu = (SlideMenu)findViewById(R.id.slideMenu);
-//        buttonToggle = (ImageButton)findViewById(R.id.buttonToggle);
-//        buttonToggle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                menu.toggleMenu();
-//            }
-//        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menu.toggleMenu();
+            }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 
@@ -74,11 +72,22 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.home:
+                Toast.makeText(this,"home",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_search:
+                Toast.makeText(this,"action_search",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_notification:
+                Toast.makeText(this,"action_notification",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_settings:
+                Toast.makeText(this,"action_settings",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_about:
+                Toast.makeText(this,"action_about",Toast.LENGTH_SHORT).show();
+                break;
         }
 
         return super.onOptionsItemSelected(item);

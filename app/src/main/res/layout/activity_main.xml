@@ -5,23 +5,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
     <com.kelly.slidemenu.SlideMenu
         android:id="@+id/slideMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:rightPadding="100dp"
-        android:background="@drawable/bg_home_content">
+        android:background="@drawable/bg_slide_menu">
         <LinearLayout
             android:id="@+id/wapper"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
-        <include
-            android:id="@+id/menu"
-            layout="@layout/home_left_menu"/>
 
-        <include
+            <include
+                android:id="@+id/menu"
+                layout="@layout/home_left_menu"/>
+
+            <include
             android:id="@+id/content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
