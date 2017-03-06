@@ -7,5 +7,5 @@
     <dimen name="menu_text_size">20sp</dimen>
 
     <dimen name="sliding_menu_width">80dp</dimen>
-
+    <dimen name="drawer_icon_size">32dp</dimen>
 </resources>

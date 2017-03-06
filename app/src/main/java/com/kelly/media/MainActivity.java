@@ -1,22 +1,32 @@
 package com.kelly.media;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bilibili.magicasakura.utils.ThemeUtils;
+import com.kelly.media.adapter.MenuItemAdapter;
+import com.kelly.media.dialog.CardPickerDialog;
 import com.kelly.media.fragment.BaseFragment;
 import com.kelly.media.fragment.LocalAudioFragment;
 import com.kelly.media.fragment.LocalVideoFragment;
 import com.kelly.media.fragment.NetAudioFragment;
 import com.kelly.media.fragment.NetVideoFragment;
+import com.kelly.media.util.ThemeHelper;
 import com.kelly.slidemenu.SlideMenu;
 import com.michaldrabik.tapbarmenulib.TapBarMenu;
 
@@ -27,16 +37,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CardPickerDialog.ClickListener {
 
     private ImageButton buttonToggle;   //显示菜单按钮
-    private SlideMenu menu;
     private ArrayList<BaseFragment> mFragments;
     private int position = 0;//Fragment页面的下标位置
     private Fragment tempFragment;//缓存的Fragment
 
     @Bind(R.id.tapBarMenu)
     TapBarMenu mTapBarMenu;
+    @Bind(R.id.slideMenu)
+    SlideMenu menu;
+    @Bind(R.id.id_lv_left_menu)
+    ListView mLvLeftMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +59,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        initView();
-
         initToorBar();
+
+        initLeftMenu();
 
         initFragment();
 
-    }
-
-    private void initView() {
-        menu = (SlideMenu)findViewById(R.id.slideMenu);
     }
 
     private void initToorBar() {
@@ -69,6 +78,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 menu.toggleMenu();
+            }
+        });
+    }
+
+    private void initLeftMenu(){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        mLvLeftMenu.addHeaderView(inflater.inflate(R.layout.nav_header_main, mLvLeftMenu, false));
+        mLvLeftMenu.setAdapter(new MenuItemAdapter(this));
+        mLvLeftMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 1://夜间模式
+                         menu.toggleMenu();
+                        break;
+                    case 2:
+                        CardPickerDialog dialog = new CardPickerDialog();
+                        dialog.setClickListener(MainActivity.this);
+                        dialog.show(getSupportFragmentManager(), "theme");
+                        menu.toggleMenu();
+
+                        break;
+                    case 3:
+//                        TimingFragment fragment3 = new TimingFragment();
+//                        fragment3.show(getSupportFragmentManager(), "timing");
+                        menu.toggleMenu();
+
+                        break;
+                    case 4:
+//                        BitSetFragment bfragment = new BitSetFragment();
+//                        bfragment.show(getSupportFragmentManager(), "bitset");
+                        menu.toggleMenu();
+
+                        break;
+                    case 5:
+//                        if (MusicPlayer.isPlaying()) {
+//                            MusicPlayer.playOrPause();
+//                        }
+//                        unbindService();
+//                        finish();
+                        menu.toggleMenu();
+                        break;
+
+                }
             }
         });
     }
@@ -170,5 +223,34 @@ public class MainActivity extends AppCompatActivity {
             }
             tempFragment = currentFragment;
         }
+    }
+
+    /**
+     * 切换主题的实现方法
+     * @param currentTheme
+     */
+    @Override
+    public void onConfirm(int currentTheme) {
+        if (ThemeHelper.getTheme(MainActivity.this) != currentTheme) {
+            ThemeHelper.setTheme(MainActivity.this, currentTheme);
+            ThemeUtils.refreshUI(MainActivity.this, new ThemeUtils.ExtraRefreshable() {
+                        @Override
+                        public void refreshGlobal(Activity activity) {
+                            //for global setting, just do once
+                            if (Build.VERSION.SDK_INT >= 21) {
+                                final MainActivity context = MainActivity.this;
+                                ActivityManager.TaskDescription taskDescription = new ActivityManager.TaskDescription(null, null, ThemeUtils.getThemeAttrColor(context, android.R.attr.colorPrimary));
+                                setTaskDescription(taskDescription);
+                                getWindow().setStatusBarColor(ThemeUtils.getColorById(context, R.color.theme_color_primary));
+                            }
+                        }
+
+                        @Override
+                        public void refreshSpecificView(View view) {
+                        }
+                    }
+            );
+        }
+//        changeTheme();
     }
 }

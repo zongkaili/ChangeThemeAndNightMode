@@ -28,7 +28,6 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-
     </LinearLayout>
 
     <include layout="@layout/home_bottom_bar_menu" />
